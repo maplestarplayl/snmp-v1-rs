@@ -50,8 +50,6 @@ impl SnmpAgent {
             println!("Invalid community string: {}", community_str);
             return Ok(());
         }
-        println!("community_str: {}", community_str);
-        println!("pdu type: {:?}", message.pdu.pdu_type);
         // Process PDU based on type
         match message.pdu.pdu_type {
             crate::snmp::PduType::GET_REQUEST => {

@@ -35,7 +35,6 @@ impl SnmpClient {
         let mut pdu_buf = BytesMut::new();
 
         snmp::build_varbind_list(oids, &mut varbind_list_buf);
-        println!("Varbind list: {:02x?}", &varbind_list_buf[..]);
         snmp::build_pdu(
             self.request_id,
             0,
@@ -49,7 +48,6 @@ impl SnmpClient {
         self.request_id += 1;
 
         let target_addr: SocketAddr = format!("{}:16100", target).parse()?;
-        eprintln!("Sending request: {:02x?}", &buf[..]);
         self.socket.send_to(&buf, target_addr)?;
 
         let mut response = vec![0u8; 1024];
@@ -58,4 +56,6 @@ impl SnmpClient {
 
         Ok(response[..len].to_vec())
     }
+
+    // pub fn set
 }

@@ -55,14 +55,10 @@ pub fn build_varbind(oid: &[u32], buf: &mut BytesMut) {
     let mut varbind_buf = BytesMut::new();
 
     encode::encode_oid(oid, &mut varbind_buf);
-    println!("OID: {:?}", oid);
-    println!("OID encoded: {:02x?}", &varbind_buf[..]);
 
     encode::encode_null(&mut varbind_buf);
-    println!("NULL encoded: {:02x?}", &varbind_buf[..]);
 
     encode::encode_sequence(&varbind_buf, encode::SEQUENCE_TAG, buf);
-    println!("Varbind encoded: {:02x?}", &buf[..]);
 }
 
 pub fn build_varbind_list(oids: &[&[u32]], buf: &mut BytesMut) {
@@ -140,12 +136,9 @@ pub struct SnmpMessage {
 pub fn decode_varbind(buf: &mut Bytes) -> Result<Varbind> {
     let mut seq_data = decode::decode_sequence(buf)
         .map_err(|e| anyhow!("Failed to decode varbind sequence: {}", e))?;
-    println!("Remaining varbind data: {:02x?}", &seq_data[..]);
     let oid =
         decode::decode_oid(&mut seq_data).map_err(|e| anyhow!("Failed to decode OID: {}", e))?;
-    println!("remaining bytes after OID: {:02x?}", &seq_data[..]);
     let tag = decode::peek_tag(&mut seq_data).map_err(|e| anyhow!("Failed to peek tag: {}", e))?;
-    println!("tag: {:?}", tag);
     let value = match tag {
         encode::INTEGER_TAG => {
             let val = decode::decode_integer(&mut seq_data)
@@ -178,7 +171,6 @@ pub fn decode_varbind_list(buf: &mut Bytes) -> Result<Vec<Varbind>> {
         .map_err(|e| anyhow!("Failed to decode varbind list sequence: {}", e))?;
 
     let mut varbinds = Vec::new();
-    println!("Remaining varbind list data: {:02x?}", &seq_data[..]);
     while seq_data.remaining() > 0 {
         varbinds.push(decode_varbind(&mut seq_data)?);
     }
@@ -187,7 +179,6 @@ pub fn decode_varbind_list(buf: &mut Bytes) -> Result<Vec<Varbind>> {
 }
 
 pub fn decode_pdu(buf: &mut Bytes) -> Result<SnmpPdu> {
-    println!("Decoding PDU...");
     let tag = decode::peek_tag(buf).map_err(|e| anyhow!("Failed to peek PDU tag: {}", e))?;
 
     let pdu_type = match tag {
@@ -210,7 +201,6 @@ pub fn decode_pdu(buf: &mut Bytes) -> Result<SnmpPdu> {
     let error_index = decode::decode_integer(&mut pdu_data)
         .map_err(|e| anyhow!("Failed to decode error index: {}", e))?;
 
-    println!("Remaining undecoded varbinds: {:02x?}", &pdu_data[..]);
     let varbinds = decode_varbind_list(&mut pdu_data)?;
     Ok(SnmpPdu {
         pdu_type,
@@ -236,9 +226,6 @@ pub fn decode_snmp_message(data: &[u8]) -> Result<SnmpMessage> {
     let community = decode::decode_octet_string(&mut msg_data)
         .map_err(|e| anyhow!("Failed to decode community string: {}", e))?;
 
-    println!("Decoded community string: {:?}", community);
-
-    println!("Remaining data: {:02x?}", &msg_data[..]);
     let pdu = decode_pdu(&mut msg_data)?;
     
 

@@ -169,8 +169,7 @@ pub fn decode_oid(buf: &mut Bytes) -> Result<Vec<u32>> {
     }
     
     let length = decode_length(buf)?;
-    println!("length: {}", length);
-    println!("after decode length, buf remaining: {:02x?}", &buf[..]);
+    
     if buf.remaining() < length {
         return Err(anyhow!("Buffer underflow when decoding OBJECT IDENTIFIER content"));
     }

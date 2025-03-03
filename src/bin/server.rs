@@ -39,7 +39,6 @@ fn main() -> Result<()> {
     // In a real application, you would use a proper signal handler
     thread::sleep(Duration::from_secs(3600)); // Run for 1 hour
     
-    
     println!("SNMP agent stopped");
     
     Ok(())

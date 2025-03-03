@@ -1,0 +1,22 @@
+# Introduction
+This is now a simple implementation of SNMP v1 written in Rust.
+THe **Goal** of this Repo is to implement series of SNMP protocols(ie v1,v2,v3) by scratch without third-party crates
+
+
+# Feature
+- [x] ASN.1 BER
+- [x] SNMP v1
+- [ ] SNMP v2
+- [ ] SNMP v3
+- [ ] Integrated with TLS
+- [ ] Replace Bytes crate
+
+# Optimization
+- [ ] Use unsafe code to avoid copying
+- [ ] 
+
+# Usage Example
+
+## Client
+
+## Server(Agent)

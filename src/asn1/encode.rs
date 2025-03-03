@@ -78,17 +78,13 @@ pub fn encode_null(buf: &mut BytesMut) {
 ///   sequence will be written.
 pub fn encode_sequence(content: &[u8], tag: u8, buf: &mut BytesMut) {
     buf.put_u8(tag);
-    println!("{:02x?}",&buf[..]);
 
     encode_length(content.len(), buf);
-    println!("{:02x?}",&buf[..]);
 
     buf.put_slice(content);
-    println!("{:02x?}",&buf[..]);
 }
 
 pub fn encode_oid(oid: &[u32], buf: &mut BytesMut) {
-    println!("oid: {:?}", oid);
     buf.put_u8(OBJECT_IDENTIFIER_TAG);
 
     let mut oid_buf = BytesMut::new();

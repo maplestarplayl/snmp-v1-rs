@@ -21,14 +21,12 @@ fn main() -> Result<()>{
 
     match client.get(target, community, &[system_description_oid]) {
         Ok(response) => {
-            println!("Received response: {:?}", response);
+            // println!("Received response: {:?}", response);
             let decoded_response = snmp::decode_snmp_message(&response)?;
             decoded_response.pdu.varbinds.iter().for_each(|varbind| {
                 println!("OID: {:?}, Value: {:?}", varbind.oid, format_snmp_value(&varbind.value));
             });
-            println!("Decoded response: {:?}", decoded_response);
             Ok(())
-            // Note: In a real implementation, you would decode the response here
         }
         Err(e) => {
             println!("Error: {}", e);
